@@ -10,7 +10,18 @@ class PartnerController extends Controller
 {
     public function index()
     {
-        $partners = Partner::all();
+        if (auth()->user()->role === 'admin') {
+
+            $partners = Partner::latest()->get();
+
+        } else {
+
+            $partners = Partner::where(
+                'organization_id',
+                auth()->user()->organization_id
+            )->latest()->get();
+
+        }
 
         return view('admin.partners.index', compact('partners'));
     }
@@ -26,6 +37,8 @@ class PartnerController extends Controller
             'name' => 'required|max:255',
             'logo_url' => 'required',
         ]);
+
+        $validated['organization_id'] = auth()->user()->organization_id;
 
         Partner::create($validated);
 

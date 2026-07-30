@@ -6,40 +6,38 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-{
-    Schema::create('transactions', function (Blueprint $table) {
+    {
+        Schema::create('transactions', function (Blueprint $table) {
 
-        $table->id();
+            $table->id();
 
-        $table->foreignId('event_id')
-              ->constrained()
-              ->cascadeOnDelete();
+            $table->foreignId('event_id')
+                ->constrained()
+                ->cascadeOnDelete();
 
-        $table->string('order_id')->unique();
+            $table->string('order_id')->unique();
 
-        $table->string('customer_name');
+            $table->string('customer_name');
 
-        $table->string('customer_email');
+            $table->string('customer_email');
 
-        $table->string('customer_phone');
+            $table->string('customer_phone');
 
-        $table->integer('total_price');
+            $table->integer('quantity');
 
-        $table->string('status')->default('Pending');
+            $table->decimal('ticket_price', 12, 2);
 
-        $table->string('snap_token')->nullable();
+            $table->decimal('admin_fee', 12, 2)->default(5000);
 
-        $table->timestamps();
-    });
-}
+            $table->decimal('total_price', 12, 2);
 
-    /**
-     * Reverse the migrations.
-     */
+            $table->string('status')->default('pending');
+
+            $table->timestamps();
+        });
+    }
+
     public function down(): void
     {
         Schema::dropIfExists('transactions');

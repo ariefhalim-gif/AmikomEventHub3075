@@ -1,132 +1,220 @@
 @extends('layouts.admin')
 
-@section('title','Dashboard')
+@section('title', 'Dashboard')
 
 @section('content')
-
- <!-- Main Content -->
     <main class="flex-1 p-10 overflow-y-auto">
+
         <!-- Header -->
         <header class="flex justify-between items-center mb-10">
             <div>
-                <h1 class="text-3xl font-black">Dashboard Ringkasan</h1>
-                <p class="text-slate-500 font-medium">Selamat datang kembali, Admin!</p>
+                <h1 class="text-3xl font-black">
+                    {{ Auth::user()->role === 'admin' ? 'Dashboard Admin' : 'Dashboard Organizer' }}
+                </h1>
+                <p class="text-slate-500 font-medium mt-1">
+                    Selamat datang,
+                    <span class="font-semibold">{{ Auth::user()->name }}</span>
+                    @if (Auth::user()->organization)
+                        • {{ Auth::user()->organization->name }}
+                    @endif
+                </p>
             </div>
+
             <div class="flex items-center gap-4">
                 <div class="text-right hidden md:block">
-                    <p class="font-bold">Admin Super</p>
-                    <p class="text-xs text-slate-400">Penyelenggara Utama</p>
+                    <p class="font-bold">{{ Auth::user()->name }}</p>
+                    <p class="text-xs text-slate-400">{{ ucfirst(Auth::user()->role) }}</p>
                 </div>
-                <div class="w-12 h-12 bg-white rounded-2xl shadow-sm border flex items-center justify-center p-1">
-                    <img src="https://ui-avatars.com/api/?name=Admin+Super&background=6366f1&color=fff"
-                        class="rounded-xl">
-                </div>
+                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=6366f1&color=ffffff"
+                     class="w-12 h-12 rounded-2xl shadow border" alt="Avatar">
             </div>
         </header>
 
-        <!-- Stats Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <!-- Statistik Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-10">
             <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                        </path>
-                    </svg>
-                </div>
                 <p class="text-slate-400 text-sm font-bold uppercase mb-1">Total Pendapatan</p>
-                <h3 class="text-2xl font-black">Rp 12.450.000</h3>
+                <h3 class="text-2xl font-black">Rp {{ number_format($totalRevenue ?? 0, 0, ',', '.') }}</h3>
             </div>
+
             <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <div class="w-12 h-12 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z">
-                        </path>
-                    </svg>
-                </div>
                 <p class="text-slate-400 text-sm font-bold uppercase mb-1">Tiket Terjual</p>
-                <h3 class="text-2xl font-black">1.284</h3>
+                <h3 class="text-2xl font-black">{{ number_format($ticketsSold ?? 0, 0, ',', '.') }}</h3>
             </div>
+
             <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <div class="w-12 h-12 bg-orange-50 text-orange-600 rounded-2xl flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
                 <p class="text-slate-400 text-sm font-bold uppercase mb-1">Event Aktif</p>
-                <h3 class="text-2xl font-black">8 Event</h3>
+                <h3 class="text-2xl font-black">{{ $activeEvents ?? 0 }} Event</h3>
             </div>
+
             <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mb-4">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
                 <p class="text-slate-400 text-sm font-bold uppercase mb-1">Pesanan Pending</p>
-                <h3 class="text-2xl font-black">12 Pesanan</h3>
+                <h3 class="text-2xl font-black">{{ $pendingOrders ?? 0 }} Pesanan</h3>
+            </div>
+
+            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
+                <p class="text-slate-400 text-sm font-bold uppercase mb-1">Total User</p>
+                <h3 class="text-2xl font-black">{{ number_format($totalUsers ?? 0) }}</h3>
             </div>
         </div>
 
-        <!-- Latest Sales Table -->
+        <!-- Grafik Visualisasi -->
+        <div class="grid lg:grid-cols-2 gap-8 mb-10">
+            <div class="bg-white rounded-3xl border p-8 shadow-sm">
+                <h3 class="font-black text-xl mb-6">Pertumbuhan Event</h3>
+                <div class="relative h-64">
+                    <canvas id="eventChart"></canvas>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl border p-8 shadow-sm">
+                <h3 class="font-black text-xl mb-6">Pertumbuhan User</h3>
+                <div class="relative h-64">
+                    <canvas id="userChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transaksi Terakhir -->
         <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
             <div class="p-8 border-b flex justify-between items-center">
                 <h3 class="font-black text-xl">Transaksi Terakhir</h3>
-                <a href="admin-transactions.html" class="text-indigo-600 font-bold hover:underline">Lihat Semua</a>
+                <a href="{{ route('admin.transactions.index') }}" class="text-indigo-600 font-bold hover:underline">
+                    Lihat Semua
+                </a>
             </div>
+
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead class="bg-slate-50 text-slate-400 uppercase text-[10px] font-black tracking-widest">
                         <tr>
+                            <th class="px-8 py-4">Tanggal</th>
                             <th class="px-8 py-4">Pembeli</th>
                             <th class="px-8 py-4">Event</th>
                             <th class="px-8 py-4">Status</th>
-                            <th class="px-8 py-4">Total</th>
+                            <th class="px-8 py-4 text-right">Total</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y border-t">
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-8 py-6">
-                                <p class="font-bold uppercase tracking-wide text-sm">Donni Prabowo</p>
-                                <p class="text-xs text-slate-400">donni@example.com</p>
-                            </td>
-                            <td class="px-8 py-6 font-medium text-slate-600">Jazz Night 2024</td>
-                            <td class="px-8 py-6">
-                                <span
-                                    class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold uppercase">Success</span>
-                            </td>
-                            <td class="px-8 py-6 font-black text-indigo-600">Rp 155.000</td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-8 py-6">
-                                <p class="font-bold uppercase tracking-wide text-sm">Maya Sari</p>
-                                <p class="text-xs text-slate-400">maya@example.com</p>
-                            </td>
-                            <td class="px-8 py-6 font-medium text-slate-600">AI & Future Workshop</td>
-                            <td class="px-8 py-6">
-                                <span
-                                    class="px-3 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs font-bold uppercase">Pending</span>
-                            </td>
-                            <td class="px-8 py-6 font-black text-indigo-600">Rp 55.000</td>
-                        </tr>
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-8 py-6">
-                                <p class="font-bold uppercase tracking-wide text-sm">Budi Santoso</p>
-                                <p class="text-xs text-slate-400">budi@example.com</p>
-                            </td>
-                            <td class="px-8 py-6 font-medium text-slate-600">Hackathon 2024</td>
-                            <td class="px-8 py-6">
-                                <span
-                                    class="px-3 py-1 bg-slate-100 text-slate-600 rounded-lg text-xs font-bold uppercase">Free</span>
-                            </td>
-                            <td class="px-8 py-6 font-black text-indigo-600">Rp 0</td>
-                        </tr>
+                        @forelse($recentTransactions as $transaction)
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="px-8 py-6">
+                                    {{ $transaction->created_at->format('d M Y') }}
+                                    <br>
+                                    <span class="text-xs text-slate-400">{{ $transaction->order_id }}</span>
+                                </td>
+                                <td class="px-8 py-6">
+                                    <p class="font-bold">{{ $transaction->customer_name }}</p>
+                                    <p class="text-xs text-slate-400">{{ $transaction->customer_email }}</p>
+                                </td>
+                                <td class="px-8 py-6">
+                                    {{ $transaction->event->title ?? '-' }}
+                                </td>
+                                <td class="px-8 py-6">
+                                    @if (in_array($transaction->status, ['success', 'settlement']))
+                                        <span class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold uppercase">
+                                            Success
+                                        </span>
+                                    @elseif($transaction->status === 'pending')
+                                        <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs font-bold uppercase">
+                                            Pending
+                                        </span>
+                                    @elseif($transaction->status === 'failed')
+                                        <span class="px-3 py-1 bg-red-100 text-red-700 rounded-lg text-xs font-bold uppercase">
+                                            Failed
+                                        </span>
+                                    @else
+                                        <span class="px-3 py-1 bg-slate-100 text-slate-700 rounded-lg text-xs font-bold uppercase">
+                                            {{ ucfirst($transaction->status) }}
+                                        </span>
+                                    @endif
+                                </td>
+                                <td class="px-8 py-6 text-right font-black text-indigo-600">
+                                    Rp {{ number_format($transaction->total_price, 0, ',', '.') }}
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-10 text-slate-400">
+                                    Belum ada transaksi.
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
         </div>
-    </main>
 
+    </main>
 @endsection
+
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Data Grafik Event dari PHP
+            const eventData = @json($eventChart ?? []);
+            const eventLabels = eventData.map(item => {
+                const date = new Date(2026, item.month - 1, 1);
+                return date.toLocaleString('id-ID', { month: 'short' });
+            });
+            const eventTotals = eventData.map(item => item.total);
+
+            // Chart Event
+            const eventCtx = document.getElementById('eventChart');
+            if (eventCtx) {
+                new Chart(eventCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: eventLabels,
+                        datasets: [{
+                            label: 'Jumlah Event',
+                            data: eventTotals,
+                            backgroundColor: '#6366f1',
+                            borderRadius: 8,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+
+            // Data Grafik User dari PHP
+            const userData = @json($userChart ?? []);
+            const userLabels = userData.map(item => item.month);
+            const userTotals = userData.map(item => item.total);
+
+            // Chart User
+            const userCtx = document.getElementById('userChart');
+            if (userCtx) {
+                new Chart(userCtx, {
+                    type: 'line',
+                    data: {
+                        labels: userLabels,
+                        datasets: [{
+                            label: 'Jumlah User',
+                            data: userTotals,
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#4f46e5'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+        });
+    </script>
+@endpush

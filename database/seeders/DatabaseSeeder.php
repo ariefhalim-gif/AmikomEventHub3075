@@ -6,20 +6,81 @@ use Illuminate\Database\Seeder;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Event;
+use App\Models\Organization;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin
-        User::create([
-            'name' => 'Admin Amikom',
-            'email' => 'admin@amikom.ac.id',
-            'password' => bcrypt('password'),
-            'role' => 'admin',
+        /*
+        |--------------------------------------------------------------------------
+        | Organizations
+        |--------------------------------------------------------------------------
+        */
+
+        $hima = Organization::create([
+            'name' => 'HIMA Informatika',
+            'slug' => Str::slug('HIMA Informatika'),
+            'description' => 'Himpunan Mahasiswa Informatika',
         ]);
 
-        // Categories
+        $bem = Organization::create([
+            'name' => 'BEM Universitas',
+            'slug' => Str::slug('BEM Universitas'),
+            'description' => 'Badan Eksekutif Mahasiswa',
+        ]);
+
+        $ukm = Organization::create([
+            'name' => 'UKM Musik',
+            'slug' => Str::slug('UKM Musik'),
+            'description' => 'Unit Kegiatan Mahasiswa Musik',
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Users
+        |--------------------------------------------------------------------------
+        */
+
+        User::create([
+            'name' => 'Super Admin',
+            'email' => 'admin@amikom.ac.id',
+            'password' => Hash::make('password'),
+            'role' => 'superadmin',
+        ]);
+
+        User::create([
+            'name' => 'Admin HIMA',
+            'email' => 'hima@amikom.ac.id',
+            'password' => Hash::make('password'),
+            'role' => 'organizer',
+            'organization_id' => $hima->id,
+        ]);
+
+        User::create([
+            'name' => 'Admin BEM',
+            'email' => 'bem@amikom.ac.id',
+            'password' => Hash::make('password'),
+            'role' => 'organizer',
+            'organization_id' => $bem->id,
+        ]);
+
+        User::create([
+            'name' => 'Admin UKM Musik',
+            'email' => 'ukm@amikom.ac.id',
+            'password' => Hash::make('password'),
+            'role' => 'organizer',
+            'organization_id' => $ukm->id,
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Categories
+        |--------------------------------------------------------------------------
+        */
+
         $category1 = Category::create([
             'name' => 'Seminar IT',
             'slug' => 'seminar-it',
@@ -35,8 +96,14 @@ class DatabaseSeeder extends Seeder
             'slug' => 'workshop',
         ]);
 
-        // Events
+        /*
+        |--------------------------------------------------------------------------
+        | Events
+        |--------------------------------------------------------------------------
+        */
+
         Event::create([
+            'organization_id' => $ukm->id,
             'category_id' => $category2->id,
             'title' => 'Jazz Night 2025',
             'description' => 'Nikmati malam yang indah dengan alunan musik.',
@@ -48,6 +115,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Event::create([
+            'organization_id' => $hima->id,
             'category_id' => $category1->id,
             'title' => 'AI Summit & Expo 2026',
             'description' => 'Jelajahi tren terkini dalam bidang Artificial Intelligence.',
@@ -59,6 +127,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Event::create([
+            'organization_id' => $hima->id,
             'category_id' => $category3->id,
             'title' => 'Laravel Bootcamp',
             'description' => 'Belajar Laravel dari dasar hingga mahir.',
@@ -70,6 +139,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Event::create([
+            'organization_id' => $hima->id,
             'category_id' => $category3->id,
             'title' => 'UI/UX Masterclass',
             'description' => 'Pelajari desain UI/UX modern.',
@@ -81,6 +151,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Event::create([
+            'organization_id' => $bem->id,
             'category_id' => $category2->id,
             'title' => 'E-Sport Championship',
             'description' => 'Turnamen E-Sport tingkat nasional.',
@@ -92,6 +163,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Event::create([
+            'organization_id' => $hima->id,
             'category_id' => $category1->id,
             'title' => 'Cyber Security Conference',
             'description' => 'Seminar keamanan siber bersama praktisi industri.',
