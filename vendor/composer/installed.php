@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-fitur-partner-23123075',
         'version' => 'dev-fitur-partner-23123075',
-        'reference' => '1bb6e174e0630a3add361cef1bafdc173b3f5021',
+        'reference' => '2cf84dd31d9cb568376de46bfafa6ce0e3df5933',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -382,7 +382,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-fitur-partner-23123075',
             'version' => 'dev-fitur-partner-23123075',
-            'reference' => '1bb6e174e0630a3add361cef1bafdc173b3f5021',
+            'reference' => '2cf84dd31d9cb568376de46bfafa6ce0e3df5933',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
